@@ -1,0 +1,129 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Oswald:wght@500;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { color-scheme: light; font-family: 'DM Sans', sans-serif; background: #f7f1e5; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; min-width: 320px; background: #f7f1e5; color: #27251f; }
+button, a { -webkit-tap-highlight-color: transparent; }
+button { font: inherit; }
+::selection { background: #d99025; color: #fff; }
+
+@layer components {
+  .page-shell { @apply mx-auto w-full max-w-[1380px] px-5 sm:px-8 lg:px-12; }
+  .font-display { font-family: 'Oswald', sans-serif; }
+  .eyebrow { @apply text-xs font-bold uppercase tracking-[.28em] text-rust; }
+  .section-title { @apply font-display text-5xl leading-[.98] text-forest sm:text-6xl; }
+  .nav-link { @apply relative py-3 text-[.78rem] font-bold uppercase tracking-[.12em] text-forest/65 transition hover:text-forest; }
+  .nav-link::after { content: ''; @apply absolute bottom-1 left-0 h-[2px] w-0 bg-rust transition-all duration-300; }
+  .nav-link:hover::after, .nav-link-active::after { @apply w-full; }
+  .nav-link-active { @apply text-forest; }
+  .button-primary { @apply items-center gap-2 rounded-full bg-rust px-5 py-3 text-xs font-bold uppercase tracking-[.12em] text-white shadow-lg shadow-rust/15 transition hover:-translate-y-0.5 hover:bg-[#843d25]; }
+  .button-gold { @apply inline-flex items-center justify-center gap-2 rounded-full bg-[#d99025] px-7 py-4 text-xs font-bold uppercase tracking-[.14em] text-white transition hover:-translate-y-0.5 hover:bg-[#bd771a]; }
+  .button-ghost { @apply inline-flex items-center justify-center gap-2 rounded-full border border-current px-7 py-4 text-xs font-bold uppercase tracking-[.14em] transition hover:bg-white hover:text-forest; }
+  .feature-card { @apply flex gap-4 rounded-2xl border border-forest/10 bg-white/50 p-5 text-forest; }
+  .feature-card > svg { @apply mt-1 shrink-0 text-rust; }
+  .feature-card h3 { @apply font-display text-xl; }
+  .feature-card p { @apply mt-1 text-sm leading-6 text-ink/55; }
+  .order-provider { @apply flex items-center justify-between rounded-2xl border border-forest/10 px-5 py-4 font-bold text-forest transition hover:border-rust hover:bg-rust hover:text-white; }
+  .footer-heading { @apply font-display text-xl uppercase tracking-wide text-white; }
+  .footer-detail { @apply flex items-start gap-3 transition hover:text-white; }
+  .footer-detail svg { @apply mt-1 shrink-0 text-gold; }
+  .skip-link { @apply fixed left-4 top-4 z-[100] -translate-y-24 rounded-lg bg-white px-4 py-2 font-bold text-forest shadow-lg transition focus:translate-y-0; }
+}
+
+/* ========================================
+   REVIEWS — VERTICAL CONVEYOR
+======================================== */
+
+.review-conveyor {
+  position: relative;
+}
+
+.review-conveyor-track {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  /*
+    30 seconds total:
+    5 reviews × roughly 6 seconds each
+  */
+  animation: review-conveyor-down 30s linear infinite;
+}
+
+.review-conveyor-set {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 1.25rem;
+}
+
+.review-conveyor-card {
+  width: 100%;
+  flex-shrink: 0;
+
+  padding: 1.6rem;
+
+  border-radius: 1.35rem;
+
+  background: #f7f1e5;
+
+  box-shadow:
+    0 15px 35px rgba(0, 0, 0, 0.13);
+
+  transition:
+    transform 300ms ease,
+    box-shadow 300ms ease;
+}
+
+.review-conveyor-card:hover {
+  transform: scale(1.015);
+
+  box-shadow:
+    0 20px 45px rgba(0, 0, 0, 0.18);
+}
+
+/*
+  Start with the duplicate set above the viewport,
+  then move downward until the original position
+  is reached.
+
+  Because both sets are identical, the reset
+  appears seamless.
+*/
+@keyframes review-conveyor-down {
+  from {
+    transform: translateY(-50%);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* Pause so customers can actually read a review
+.review-conveyor:hover .review-conveyor-track {
+  animation-play-state: paused;
+} */
+
+/* Slightly tighter cards on phones */
+@media (max-width: 639px) {
+  .review-conveyor-set {
+    gap: 1rem;
+    padding: 1rem 0;
+  }
+
+  .review-conveyor-card {
+    padding: 1.4rem;
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .review-conveyor-track {
+    animation-play-state: paused;
+  }
+}
