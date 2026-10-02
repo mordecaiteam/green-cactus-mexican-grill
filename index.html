@@ -1,6 +1,9 @@
 <!doctype html>
+
 <html lang="en">
+
   <head>
+
     <meta charset="UTF-8" />
 
     <meta
@@ -18,22 +21,40 @@
       content="Green Cactus Fresh Mexican Grill in Stony Brook, New York. Fresh Mexican favorites made to order."
     />
 
+
     <!-- Website Icon / Favicon -->
+
     <link
       rel="icon"
       type="image/png"
       href="/images/green-cactus-logo.png"
     />
 
-    <title>Green Cactus | Fresh Mexican Grill</title>
+
+    <title>
+      Green Cactus | Fresh Mexican Grill
+    </title>
+
   </head>
+
 
   <body>
 
     <!--
-      Hidden form used by Netlify to detect
-      the React contact form during deployment.
+      ==========================================
+      NETLIFY FORM DETECTION
+      ==========================================
+
+      Netlify scans the generated HTML during
+      deployment.
+
+      This hidden form tells Netlify that a form
+      named "contact" exists.
+
+      The visible React form submits to this
+      registered Netlify form.
     -->
+
     <form
       name="contact"
       method="POST"
@@ -41,32 +62,53 @@
       netlify-honeypot="bot-field"
       hidden
     >
+
       <input
         type="hidden"
         name="form-name"
         value="contact"
       />
 
+
+      <!-- Honeypot -->
+
       <input
         name="bot-field"
       />
+
+
+      <!-- Name -->
 
       <input
         type="text"
         name="name"
       />
 
+
+      <!-- Email -->
+
       <input
         type="email"
         name="email"
       />
+
+
+      <!-- Phone -->
 
       <input
         type="tel"
         name="phone"
       />
 
+
+      <!-- Subject -->
+
       <select name="subject">
+
+        <option value="">
+          Select a topic
+        </option>
+
         <option value="general">
           General question
         </option>
@@ -86,14 +128,23 @@
         <option value="other">
           Something else
         </option>
+
       </select>
 
+
+      <!-- Message -->
+
       <textarea name="message"></textarea>
+
     </form>
 
 
-    <!-- React App -->
+    <!-- ========================================
+         REACT APP
+    ======================================== -->
+
     <div id="root"></div>
+
 
     <script
       type="module"
@@ -101,4 +152,5 @@
     ></script>
 
   </body>
+
 </html>

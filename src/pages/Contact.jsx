@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import {
   Clock,
   Mail,
@@ -5,18 +6,67 @@ import {
   Phone,
   Send,
 } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 
 import { siteInfo } from '../data/site'
 
 export default function Contact() {
+  const navigate = useNavigate()
+
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState('')
+
+  const handleSubmit = async (event) => {
+    event.preventDefault()
+
+    if (isSubmitting) return
+
+    const form = event.currentTarget
+    const formData = new FormData(form)
+
+    setIsSubmitting(true)
+    setSubmitError('')
+
+    try {
+      const response = await fetch('/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams(formData).toString(),
+      })
+
+      if (!response.ok) {
+        throw new Error(
+          `Form submission failed with status ${response.status}`
+        )
+      }
+
+      form.reset()
+
+      navigate('/thank-you')
+    } catch (error) {
+      console.error('Contact form error:', error)
+
+      setSubmitError(
+        'Sorry, we could not send your message. Please try again.'
+      )
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
   return (
     <main id="main-content">
 
       {/* ========================================
           HERO
       ======================================== */}
+
       <section className="bg-forest py-16 text-cream sm:py-20">
+
         <div className="page-shell">
+
           <div className="max-w-3xl">
 
             <p className="text-xs font-bold uppercase tracking-[0.28em] text-gold">
@@ -25,7 +75,9 @@ export default function Contact() {
 
             <h1 className="mt-4 font-display text-6xl leading-[0.95] sm:text-7xl">
               We'd love to
-              <span className="text-gold"> hear from you.</span>
+              <span className="text-gold">
+                {' '}hear from you.
+              </span>
             </h1>
 
             <p className="mt-6 max-w-xl text-base leading-7 text-cream/70 sm:text-lg">
@@ -34,18 +86,26 @@ export default function Contact() {
             </p>
 
           </div>
+
         </div>
+
       </section>
 
 
       {/* ========================================
           CONTACT
       ======================================== */}
+
       <section className="bg-cream py-16 sm:py-24">
+
         <div className="page-shell grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
 
-          {/* LEFT */}
+          {/* ====================================
+              LEFT SIDE
+          ==================================== */}
+
           <div>
+
             <p className="eyebrow">
               Visit Green Cactus
             </p>
@@ -61,20 +121,24 @@ export default function Contact() {
 
 
             {/* Details */}
+
             <div className="mt-10 space-y-7">
 
               {/* Address */}
+
               <a
                 href={siteInfo.directionsUrl}
                 target="_blank"
                 rel="noreferrer"
                 className="group flex items-start gap-4"
               >
+
                 <div className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-rust text-cream transition group-hover:bg-gold group-hover:text-forest">
                   <MapPin size={20} />
                 </div>
 
                 <div>
+
                   <p className="text-xs font-bold uppercase tracking-[0.18em] text-rust">
                     Visit
                   </p>
@@ -86,20 +150,25 @@ export default function Contact() {
                   <p className="mt-1 text-sm text-ink/50">
                     Get directions →
                   </p>
+
                 </div>
+
               </a>
 
 
               {/* Phone */}
+
               <a
                 href={siteInfo.phoneHref}
                 className="group flex items-start gap-4"
               >
+
                 <div className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-rust text-cream transition group-hover:bg-gold group-hover:text-forest">
                   <Phone size={20} />
                 </div>
 
                 <div>
+
                   <p className="text-xs font-bold uppercase tracking-[0.18em] text-rust">
                     Call
                   </p>
@@ -111,65 +180,78 @@ export default function Contact() {
                   <p className="mt-1 text-sm text-ink/50">
                     Tap to call
                   </p>
+
                 </div>
+
               </a>
 
 
               {/* Hours */}
-<div className="flex items-start gap-4">
 
-  <div className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-rust text-cream">
-    <Clock size={20} />
-  </div>
+              <div className="flex items-start gap-4">
 
-  <div className="w-full max-w-xs">
+                <div className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-rust text-cream">
+                  <Clock size={20} />
+                </div>
 
-    <p className="text-xs font-bold uppercase tracking-[0.18em] text-rust">
-      Hours
-    </p>
+                <div className="w-full max-w-xs">
 
-    <div className="mt-3 space-y-2">
+                  <p className="text-xs font-bold uppercase tracking-[0.18em] text-rust">
+                    Hours
+                  </p>
 
-      {siteInfo.hours.map((item) => (
-        <div
-          key={item.day}
-          className="flex items-center justify-between gap-8 text-sm"
-        >
-          <span className="text-ink/60">
-            {item.day}
-          </span>
+                  <div className="mt-3 space-y-2">
 
-          <span className="whitespace-nowrap font-semibold text-forest">
-            {item.hours}
-          </span>
-        </div>
-      ))}
+                    {siteInfo.hours.map((item) => (
 
-    </div>
+                      <div
+                        key={item.day}
+                        className="flex items-center justify-between gap-8 text-sm"
+                      >
 
-    <p className="mt-3 text-xs text-ink/45">
-      Holiday hours may vary.
-    </p>
+                        <span className="text-ink/60">
+                          {item.day}
+                        </span>
 
-  </div>
+                        <span className="whitespace-nowrap font-semibold text-forest">
+                          {item.hours}
+                        </span>
 
-</div>
+                      </div>
+
+                    ))}
+
+                  </div>
+
+                  <p className="mt-3 text-xs text-ink/45">
+                    Holiday hours may vary.
+                  </p>
+
+                </div>
+
+              </div>
 
             </div>
+
           </div>
 
 
-          {/* ========================================
-              NETLIFY FORM
-          ======================================== */}
+          {/* ====================================
+              CONTACT FORM
+          ==================================== */}
+
           <div className="rounded-[2rem] bg-white p-7 shadow-xl shadow-forest/5 sm:p-10">
 
+            {/* Form Header */}
+
             <div className="flex items-center gap-3">
+
               <div className="grid h-11 w-11 place-items-center rounded-full bg-gold/15 text-rust">
                 <Mail size={20} />
               </div>
 
               <div>
+
                 <p className="text-xs font-bold uppercase tracking-[0.18em] text-rust">
                   Contact us
                 </p>
@@ -177,39 +259,60 @@ export default function Contact() {
                 <h2 className="font-display text-3xl text-forest">
                   Send us a message.
                 </h2>
+
               </div>
+
             </div>
 
+
+            {/* ==================================
+                NETLIFY FORM
+            ================================== */}
 
             <form
               name="contact"
               method="POST"
               data-netlify="true"
               netlify-honeypot="bot-field"
-              action="/thank-you"
+              onSubmit={handleSubmit}
               className="mt-8 space-y-6"
             >
 
-              {/* Required by Netlify */}
+              {/* Required Netlify form name */}
+
               <input
                 type="hidden"
                 name="form-name"
                 value="contact"
               />
 
-              {/* Spam protection */}
+
+              {/* Honeypot */}
+
               <p className="hidden">
+
                 <label>
                   Don't fill this out if you're human:
-                  <input name="bot-field" />
+
+                  <input
+                    name="bot-field"
+                    tabIndex="-1"
+                    autoComplete="off"
+                  />
+
                 </label>
+
               </p>
 
 
               {/* Name + Email */}
+
               <div className="grid gap-5 sm:grid-cols-2">
 
+                {/* Name */}
+
                 <div>
+
                   <label
                     htmlFor="name"
                     className="mb-2 block text-sm font-bold text-forest"
@@ -225,10 +328,15 @@ export default function Contact() {
                     autoComplete="name"
                     placeholder="Your name"
                     className="
-                      w-full rounded-xl
-                      border border-forest/15
-                      bg-cream/40 px-4 py-3.5
-                      text-ink outline-none
+                      w-full
+                      rounded-xl
+                      border
+                      border-forest/15
+                      bg-cream/40
+                      px-4
+                      py-3.5
+                      text-ink
+                      outline-none
                       transition
                       placeholder:text-ink/35
                       focus:border-rust
@@ -236,10 +344,14 @@ export default function Contact() {
                       focus:ring-rust/10
                     "
                   />
+
                 </div>
 
 
+                {/* Email */}
+
                 <div>
+
                   <label
                     htmlFor="email"
                     className="mb-2 block text-sm font-bold text-forest"
@@ -255,10 +367,15 @@ export default function Contact() {
                     autoComplete="email"
                     placeholder="you@example.com"
                     className="
-                      w-full rounded-xl
-                      border border-forest/15
-                      bg-cream/40 px-4 py-3.5
-                      text-ink outline-none
+                      w-full
+                      rounded-xl
+                      border
+                      border-forest/15
+                      bg-cream/40
+                      px-4
+                      py-3.5
+                      text-ink
+                      outline-none
                       transition
                       placeholder:text-ink/35
                       focus:border-rust
@@ -266,21 +383,26 @@ export default function Contact() {
                       focus:ring-rust/10
                     "
                   />
+
                 </div>
 
               </div>
 
 
               {/* Phone */}
+
               <div>
+
                 <label
                   htmlFor="phone"
                   className="mb-2 block text-sm font-bold text-forest"
                 >
                   Phone
+
                   <span className="ml-1 font-normal text-ink/40">
                     (optional)
                   </span>
+
                 </label>
 
                 <input
@@ -290,10 +412,15 @@ export default function Contact() {
                   autoComplete="tel"
                   placeholder="(631) 555-0123"
                   className="
-                    w-full rounded-xl
-                    border border-forest/15
-                    bg-cream/40 px-4 py-3.5
-                    text-ink outline-none
+                    w-full
+                    rounded-xl
+                    border
+                    border-forest/15
+                    bg-cream/40
+                    px-4
+                    py-3.5
+                    text-ink
+                    outline-none
                     transition
                     placeholder:text-ink/35
                     focus:border-rust
@@ -301,11 +428,14 @@ export default function Contact() {
                     focus:ring-rust/10
                   "
                 />
+
               </div>
 
 
               {/* Subject */}
+
               <div>
+
                 <label
                   htmlFor="subject"
                   className="mb-2 block text-sm font-bold text-forest"
@@ -319,17 +449,26 @@ export default function Contact() {
                   defaultValue=""
                   required
                   className="
-                    w-full rounded-xl
-                    border border-forest/15
-                    bg-cream/40 px-4 py-3.5
-                    text-ink outline-none
+                    w-full
+                    rounded-xl
+                    border
+                    border-forest/15
+                    bg-cream/40
+                    px-4
+                    py-3.5
+                    text-ink
+                    outline-none
                     transition
                     focus:border-rust
                     focus:ring-2
                     focus:ring-rust/10
                   "
                 >
-                  <option value="" disabled>
+
+                  <option
+                    value=""
+                    disabled
+                  >
                     Select a topic
                   </option>
 
@@ -352,12 +491,16 @@ export default function Contact() {
                   <option value="other">
                     Something else
                   </option>
+
                 </select>
+
               </div>
 
 
               {/* Message */}
+
               <div>
+
                 <label
                   htmlFor="message"
                   className="mb-2 block text-sm font-bold text-forest"
@@ -372,10 +515,16 @@ export default function Contact() {
                   rows="6"
                   placeholder="How can we help?"
                   className="
-                    w-full resize-none rounded-xl
-                    border border-forest/15
-                    bg-cream/40 px-4 py-3.5
-                    text-ink outline-none
+                    w-full
+                    resize-none
+                    rounded-xl
+                    border
+                    border-forest/15
+                    bg-cream/40
+                    px-4
+                    py-3.5
+                    text-ink
+                    outline-none
                     transition
                     placeholder:text-ink/35
                     focus:border-rust
@@ -383,17 +532,47 @@ export default function Contact() {
                     focus:ring-rust/10
                   "
                 />
+
               </div>
 
 
+              {/* Error */}
+
+              {submitError && (
+
+                <div
+                  role="alert"
+                  className="rounded-xl border border-rust/20 bg-rust/5 px-4 py-3 text-sm leading-6 text-rust"
+                >
+                  {submitError}
+                </div>
+
+              )}
+
+
               {/* Submit */}
+
               <button
                 type="submit"
-                className="button-primary w-full justify-center sm:w-auto"
+                disabled={isSubmitting}
+                className="
+                  button-primary
+                  w-full
+                  justify-center
+                  disabled:cursor-not-allowed
+                  disabled:opacity-60
+                  sm:w-auto
+                "
               >
-                Send message
+
+                {isSubmitting
+                  ? 'Sending...'
+                  : 'Send message'}
+
                 <Send size={17} />
+
               </button>
+
 
               <p className="text-xs leading-5 text-ink/40">
                 We'll only use the information you provide to respond
@@ -403,7 +582,9 @@ export default function Contact() {
             </form>
 
           </div>
+
         </div>
+
       </section>
 
     </main>

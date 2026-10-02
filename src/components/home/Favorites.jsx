@@ -1,9 +1,9 @@
 import { ArrowRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
-import quesadillaImg from '../../assets/food/food(23).png'
-import burritoImg from '../../assets/food/food(17).png'
-import tostadaImg from '../../assets/food/food(43).png'
+import quesadillaImg from '../../assets/food/food(23).webp'
+import burritoImg from '../../assets/food/food(17).webp'
+import tostadaImg from '../../assets/food/food(43).webp'
 
 const favorites = [
   {

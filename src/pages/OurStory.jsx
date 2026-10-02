@@ -1,9 +1,9 @@
 import { ArrowRight, Heart, MapPin, Sparkles, Utensils } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
-import storyMain from '../assets/food/food(44).png'
-import storyFood from '../assets/food/food(22).png'
-import storyRestaurant from '../assets/food/food(27).png'
+import storyMain from '../assets/food/food(44).webp'
+import storyFood from '../assets/food/food(22).webp'
+import storyRestaurant from '../assets/food/food(27).webp'
 
 export default function OurStory() {
   return (
