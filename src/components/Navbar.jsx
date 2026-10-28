@@ -72,7 +72,7 @@ export default function Navbar() {
             aria-label="Green Cactus home"
           >
             <img
-              src="/images/green-cactus-logo.png"
+              src="/images/green-cactus-logo.webp"
               alt="Green Cactus"
               className="h-16 w-16 rounded-full object-cover mix-blend-multiply"
             />

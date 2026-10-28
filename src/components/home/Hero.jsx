@@ -1,4 +1,7 @@
+// src/components/home/Hero.jsx
+
 import { useEffect, useState } from 'react'
+
 import {
   ArrowRight,
   ExternalLink,
@@ -9,11 +12,15 @@ import {
 import { Link } from 'react-router-dom'
 import { siteInfo } from '../../data/site'
 
-import food1 from '../../assets/food/food(7).webp'
-import food2 from '../../assets/food/food(22).webp'
-import food3 from '../../assets/food/food(24).webp'
-import food4 from '../../assets/food/food(32).webp'
-import food5 from '../../assets/food/food(46).webp'
+// ========================================
+// HERO IMAGES
+// ========================================
+
+import food1 from '../../assets/menu/large/salads/salads-tostada.webp'
+import food2 from '../../assets/menu/large/favorites/favorites-fajita-platter.webp'
+import food3 from '../../assets/menu/large/salads/salads-cactus-salada.webp'
+import food4 from '../../assets/menu/large/tacos/tacos-primo.webp'
+import food5 from '../../assets/menu/large/favorites/favorites-torta.webp'
 
 const heroImages = [
   food1,
@@ -23,19 +30,94 @@ const heroImages = [
   food5,
 ]
 
+const SLIDE_DURATION = 3000
+const PRELOAD_DELAY = 2000
+
 export default function Hero() {
   const [currentImage, setCurrentImage] = useState(0)
+  const [loadedImages, setLoadedImages] = useState([0])
+  const [isPageVisible, setIsPageVisible] = useState(
+    () => typeof document === 'undefined' || !document.hidden
+  )
+
+  // ========================================
+  // PAGE VISIBILITY
+  // ========================================
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentImage(
-        (current) =>
-          (current + 1) % heroImages.length
-      )
-    }, 3000)
+    const handleVisibilityChange = () => {
+      setIsPageVisible(!document.hidden)
+    }
 
-    return () => clearInterval(interval)
+    document.addEventListener(
+      'visibilitychange',
+      handleVisibilityChange
+    )
+
+    return () => {
+      document.removeEventListener(
+        'visibilitychange',
+        handleVisibilityChange
+      )
+    }
   }, [])
+
+  // ========================================
+  // PROGRESSIVE IMAGE LOADING
+  // ========================================
+
+  useEffect(() => {
+    if (!isPageVisible) return
+
+    const nextIndex = (currentImage + 1) % heroImages.length
+
+    // The next image has already been loaded.
+    if (loadedImages.includes(nextIndex)) return
+
+    let cancelled = false
+
+    const timeout = window.setTimeout(() => {
+      const img = new Image()
+
+      img.onload = () => {
+        if (cancelled) return
+
+        setLoadedImages((previous) =>
+          previous.includes(nextIndex)
+            ? previous
+            : [...previous, nextIndex]
+        )
+      }
+
+      img.src = heroImages[nextIndex]
+    }, PRELOAD_DELAY)
+
+    return () => {
+      cancelled = true
+      window.clearTimeout(timeout)
+    }
+  }, [currentImage, loadedImages, isPageVisible])
+
+  // ========================================
+  // SLIDESHOW
+  // ========================================
+
+  useEffect(() => {
+    if (!isPageVisible) return
+
+    const nextIndex = (currentImage + 1) % heroImages.length
+
+    const timeout = window.setTimeout(() => {
+      // Only transition when the next image is ready.
+      if (loadedImages.includes(nextIndex)) {
+        setCurrentImage(nextIndex)
+      }
+    }, SLIDE_DURATION)
+
+    return () => {
+      window.clearTimeout(timeout)
+    }
+  }, [currentImage, loadedImages, isPageVisible])
 
   return (
     <section className="relative overflow-hidden">
@@ -46,38 +128,41 @@ export default function Hero() {
 
       <div className="absolute inset-0">
 
-        {heroImages.map((image, index) => (
+        {heroImages.map((image, index) => {
+          if (!loadedImages.includes(index)) return null
 
-          <img
-            key={image}
-            src={image}
-            alt=""
-            aria-hidden="true"
-            className={`
-              absolute
-              inset-0
-              h-full
-              w-full
-              object-cover
-              transition-opacity
-              duration-1000
-              ${
-                index === currentImage
-                  ? 'opacity-100'
-                  : 'opacity-0'
-              }
-            `}
-          />
-
-        ))}
+          return (
+            <img
+              key={image}
+              src={image}
+              alt=""
+              aria-hidden="true"
+              loading={index === 0 ? 'eager' : 'lazy'}
+              fetchpriority={index === 0 ? 'high' : 'auto'}
+              decoding="async"
+              className={`
+                absolute
+                inset-0
+                h-full
+                w-full
+                object-cover
+                transition-opacity
+                duration-1000
+                ${
+                  index === currentImage
+                    ? 'opacity-100'
+                    : 'opacity-0'
+                }
+              `}
+            />
+          )
+        })}
 
       </div>
 
-
-      {/* Dark gradient overlay */}
+      {/* DARK GRADIENT OVERLAY */}
 
       <div className="absolute inset-0 z-[1] bg-[linear-gradient(90deg,rgba(25,38,28,.94)_0%,rgba(25,38,28,.82)_43%,rgba(25,38,28,.25)_75%)]" />
-
 
       {/* ========================================
           HERO CONTENT
@@ -96,12 +181,10 @@ export default function Hero() {
             </span>
           </h1>
 
-
           <p className="mt-7 max-w-xl text-base leading-7 text-cream/80 sm:text-lg">
             Bold Mexican favorites, generous portions, and the freedom to
             make every order your own—served fresh in Stony Brook.
           </p>
-
 
           {/* ========================================
               PRIMARY ACTIONS
@@ -116,20 +199,17 @@ export default function Hero() {
               rel="noreferrer"
             >
               Order now
-
               <ArrowRight size={18} />
             </a>
 
-
             <Link
               className="button-ghost"
-              to="/gallery"
+              to="/menu"
             >
-              See the restaurant
+              View Menu
             </Link>
 
           </div>
-
 
           {/* ========================================
               LOCATION + PHONE
@@ -139,7 +219,7 @@ export default function Hero() {
 
             <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-3">
 
-              {/* Address */}
+              {/* ADDRESS */}
 
               <a
                 href={siteInfo.directionsUrl}
@@ -164,7 +244,6 @@ export default function Hero() {
                   active:scale-[0.98]
                 "
               >
-
                 <MapPin
                   size={18}
                   className="
@@ -177,7 +256,7 @@ export default function Hero() {
                 />
 
                 <span className="border-b border-white/25 pb-0.5 transition group-hover:border-gold">
-                  1099 N Country Rd
+                  VISIT US: 1099 N Country Rd
                 </span>
 
                 <ExternalLink
@@ -193,11 +272,9 @@ export default function Hero() {
                     group-hover:text-gold
                   "
                 />
-
               </a>
 
-
-              {/* Phone */}
+              {/* PHONE */}
 
               <a
                 href={siteInfo.phoneHref}
@@ -220,7 +297,6 @@ export default function Hero() {
                   active:scale-[0.98]
                 "
               >
-
                 <Phone
                   size={18}
                   className="
@@ -233,7 +309,7 @@ export default function Hero() {
                 />
 
                 <span className="border-b border-white/25 pb-0.5 transition group-hover:border-gold">
-                  {siteInfo.phoneDisplay}
+                  CALL US: {siteInfo.phoneDisplay}
                 </span>
 
                 <ArrowRight
@@ -248,7 +324,6 @@ export default function Hero() {
                     group-hover:text-gold
                   "
                 />
-
               </a>
 
             </div>

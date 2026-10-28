@@ -1,4 +1,6 @@
-import { Route, Routes } from 'react-router-dom'
+// src/App.jsx
+
+import { Route, Routes, useLocation } from 'react-router-dom'
 
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
@@ -14,6 +16,11 @@ import PrivacyPolicy from './pages/PrivacyPolicy'
 import TermsOfService from './pages/TermsOfService'
 
 export default function App() {
+  const location = useLocation()
+
+  // Hide footer only on the Menu page
+  const hideFooter = location.pathname.replace(/\/+$/, '') === '/menu'
+
   return (
     <>
       <ScrollToTop />
@@ -31,7 +38,8 @@ export default function App() {
         <Route path="/terms-of-service" element={<TermsOfService />} />
       </Routes>
 
-      <Footer />
+      {/* Show footer on every page except Menu */}
+      {!hideFooter && <Footer />}
     </>
   )
 }

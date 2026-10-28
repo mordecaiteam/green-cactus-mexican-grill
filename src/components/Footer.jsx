@@ -1,43 +1,133 @@
-import { MapPin, Phone } from 'lucide-react'
+// src/components/Footer.jsx
+
+import {
+  MapPin,
+  Phone,
+  Mail,
+  Instagram,
+  Facebook,
+  ArrowUpRight,
+  Navigation,
+} from 'lucide-react'
+
 import { NavLink } from 'react-router-dom'
 import { navigation, siteInfo } from '../data/site'
 
 import mordecaiLogo from '../assets/misc/MordecAI_logo.png'
-import emailLogo from '../assets/misc/gmail_logo.svg'
-import igLogo from '../assets/misc/ig_logo.svg'
-import fbLogo from '../assets/misc/fb_logo.svg'
+
+// ========================================
+// COMPACT CONTACT LINK
+// ========================================
+
+function ContactLink({ href, icon: Icon, label, external = false }) {
+  return (
+    <a
+      href={href}
+      target={external ? '_blank' : undefined}
+      rel={external ? 'noopener noreferrer' : undefined}
+      className="
+        group
+        flex
+        min-h-[44px]
+        w-full
+        items-center
+        gap-2
+        rounded-lg
+        border
+        border-gold/20
+        bg-white/5
+        px-2
+        py-1.5
+        transition-all
+        duration-200
+        hover:border-gold
+        hover:bg-gold/10
+        focus-visible:outline
+        focus-visible:outline-2
+        focus-visible:outline-offset-2
+        focus-visible:outline-gold
+        active:scale-[0.98]
+        sm:gap-3
+        sm:px-3
+      "
+    >
+      {/* YELLOW ICON */}
+
+      <span
+        className="
+          flex
+          h-8
+          w-8
+          shrink-0
+          items-center
+          justify-center
+          rounded-full
+          bg-gold
+          text-forest
+          sm:h-9
+          sm:w-9
+        "
+      >
+        <Icon size={17} strokeWidth={2} />
+      </span>
+
+      {/* LABEL */}
+
+      <span className="min-w-0 flex-1 text-xs font-semibold leading-5 text-cream sm:text-sm">
+        {label}
+      </span>
+
+      {/* LINK INDICATOR */}
+
+      <ArrowUpRight
+        size={14}
+        className="hidden shrink-0 text-gold/70 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 sm:block"
+      />
+    </a>
+  )
+}
+
+// ========================================
+// FOOTER
+// ========================================
 
 export default function Footer() {
   return (
     <footer className="bg-forest text-cream">
 
-      <div className="page-shell py-14 sm:py-16">
+      <div className="page-shell py-9 sm:py-12 lg:py-14">
 
         {/* ========================================
-            MAIN FOOTER
+            MAIN FOOTER GRID
         ======================================== */}
 
-        <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-x-5 gap-y-8 sm:gap-x-10 lg:grid-cols-[1.3fr_0.65fr_1fr] lg:gap-12">
 
-          {/* Brand */}
+          {/* ========================================
+              BRAND
+          ======================================== */}
 
-          <div className="lg:col-span-1">
+          <div className="col-span-2 lg:col-span-1">
+
+            {/* LOGO */}
 
             <div className="flex items-center gap-3">
 
               <img
                 src="/images/green-cactus-logo.png"
-                alt="Green Cactus"
-                className="h-16 w-16 rounded-full object-cover"
+                alt="Green Cactus Fresh Mexican Grill"
+                loading="lazy"
+                decoding="async"
+                className="h-14 w-14 shrink-0 rounded-full object-cover sm:h-16 sm:w-16"
               />
 
-              <div className="leading-none">
+              <div className="min-w-0">
 
-                <p className="font-display text-2xl tracking-wide">
+                <p className="font-display text-xl leading-none tracking-wide sm:text-2xl">
                   GREEN CACTUS
                 </p>
 
-                <p className="mt-1 text-[0.62rem] font-bold uppercase tracking-[0.22em] text-gold">
+                <p className="mt-1 text-[0.55rem] font-bold uppercase tracking-[0.16em] text-gold sm:text-[0.65rem]">
                   Fresh Mexican Grill
                 </p>
 
@@ -45,154 +135,128 @@ export default function Footer() {
 
             </div>
 
+            {/* DESCRIPTION */}
 
-            <p className="mt-5 max-w-xs text-sm leading-6 text-cream/65">
-              Fresh Mexican favorites, generous portions, and food
-              made your way in Stony Brook.
+            <p className="mt-4 max-w-sm text-sm leading-6 text-cream/65">
+              Fresh Mexican favorites, generous portions,
+              and food made your way in Stony Brook.
             </p>
+
+            {/* ADDRESS */}
+
+            <div className="mt-3 flex items-start gap-2">
+
+              <MapPin
+                size={16}
+                className="mt-1 shrink-0 text-gold"
+              />
+
+              <p className="text-xs leading-5 text-cream/60 sm:text-sm">
+                {siteInfo.addressLine}
+              </p>
+
+            </div>
+
+            {/* DIRECTIONS BUTTON */}
+
+            <a
+              href={siteInfo.directionsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="
+                group
+                mt-5
+                inline-flex
+                min-h-[44px]
+                items-center
+                justify-center
+                gap-2
+                rounded-full
+                bg-gold
+                px-6
+                py-2.5
+                text-xs
+                font-bold
+                uppercase
+                tracking-[0.12em]
+                text-forest
+                transition
+                hover:brightness-110
+                active:scale-[0.98]
+              "
+            >
+              Get Directions
+
+              <Navigation size={16} />
+
+            </a>
 
           </div>
 
+          {/* ========================================
+              EXPLORE
+          ======================================== */}
 
-          {/* Navigation */}
+          <div className="min-w-0">
 
-          <div>
-
-            <h3 className="footer-heading">
+            <h3 className="footer-heading text-lg sm:text-xl">
               Explore
             </h3>
 
-            <nav className="mt-5 flex flex-col items-start gap-3">
-
+            <nav
+              aria-label="Footer navigation"
+              className="mt-4 flex flex-col items-start gap-3"
+            >
               {navigation.map((item) => (
-
                 <NavLink
                   key={item.to}
                   to={item.to}
-                  className="text-sm text-cream/65 transition hover:text-gold"
+                  className="text-xs text-cream/70 transition hover:text-gold sm:text-sm"
                 >
                   {item.label}
                 </NavLink>
-
               ))}
-
             </nav>
 
           </div>
 
+          {/* ========================================
+              CONNECT WITH US
+          ======================================== */}
 
-          {/* Visit */}
+          <div className="min-w-0">
 
-          <div>
-
-            <h3 className="footer-heading">
-              Visit Us
-            </h3>
-
-            <div className="mt-5 flex flex-col gap-4">
-
-              <a
-                href={siteInfo.directionsUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="group flex items-start gap-3 text-sm text-cream/65 transition hover:text-cream"
-              >
-                <MapPin
-                  size={19}
-                  className="mt-0.5 shrink-0 text-gold"
-                />
-
-                <span>
-                  {siteInfo.addressLine}
-                </span>
-              </a>
-
-
-              <a
-                href={siteInfo.phoneHref}
-                className="group flex items-center gap-3 text-sm text-cream/65 transition hover:text-cream"
-              >
-                <Phone
-                  size={18}
-                  className="shrink-0 text-gold"
-                />
-
-                <span>
-                  {siteInfo.phoneDisplay}
-                </span>
-              </a>
-
-            </div>
-
-          </div>
-
-
-          {/* Connect */}
-
-          <div>
-
-            <h3 className="footer-heading">
+            <h3 className="footer-heading text-lg leading-tight sm:text-xl">
               Connect With Us
             </h3>
 
-            <div className="mt-5 flex flex-col gap-4">
+            <div className="mt-4 flex flex-col gap-2">
 
-              {/* Email */}
+              <ContactLink
+                href={siteInfo.phoneHref}
+                icon={Phone}
+                label={siteInfo.phoneDisplay}
+              />
 
-              <a
-                href="mailto:YOUR_EMAIL_HERE"
-                className="group flex items-center gap-3 text-sm text-cream/65 transition hover:text-cream"
-              >
-                <img
-                  src={emailLogo}
-                  alt=""
-                  className="h-7 w-7 object-contain transition group-hover:scale-110"
-                />
+              <ContactLink
+                href={siteInfo.emailHref}
+                icon={Mail}
+                label="Email Us"
+              />
 
-                <span>
-                  YOUR EMAIL
-                </span>
-              </a>
+              <ContactLink
+                href={siteInfo.instagramUrl}
+                icon={Instagram}
+                label="Instagram"
+                external
+              />
 
-
-              {/* Instagram */}
-
-              <a
-                href="YOUR_INSTAGRAM_URL"
-                target="_blank"
-                rel="noreferrer"
-                className="group flex items-center gap-3 text-sm text-cream/65 transition hover:text-cream"
-              >
-                <img
-                  src={igLogo}
-                  alt=""
-                  className="h-7 w-7 object-contain transition group-hover:scale-110"
-                />
-
-                <span>
-                  Instagram
-                </span>
-              </a>
-
-
-              {/* Facebook */}
-
-              <a
-                href="YOUR_FACEBOOK_URL"
-                target="_blank"
-                rel="noreferrer"
-                className="group flex items-center gap-3 text-sm text-cream/65 transition hover:text-cream"
-              >
-                <img
-                  src={fbLogo}
-                  alt=""
-                  className="h-7 w-7 object-contain transition group-hover:scale-110"
-                />
-
-                <span>
-                  Facebook
-                </span>
-              </a>
+              <ContactLink
+                href={siteInfo.facebookUrl}
+                icon={Facebook}
+                label="Facebook"
+                external
+              />
 
             </div>
 
@@ -200,24 +264,22 @@ export default function Footer() {
 
         </div>
 
-
         {/* ========================================
             BOTTOM BAR
         ======================================== */}
 
-        <div className="mt-12 border-t border-cream/10 pt-6">
+        <div className="mt-9 border-t border-cream/10 pt-5 sm:mt-10">
 
-          <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
 
-            {/* Copyright + Legal */}
+            {/* COPYRIGHT + LEGAL */}
 
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-2">
 
-              <p className="text-xs text-cream/45">
+              <p className="text-xs leading-5 text-cream/45">
                 © {new Date().getFullYear()} Green Cactus Fresh
                 Mexican Grill. All rights reserved.
               </p>
-
 
               <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
 
@@ -228,10 +290,7 @@ export default function Footer() {
                   Privacy Policy
                 </NavLink>
 
-                <span
-                  className="text-cream/20"
-                  aria-hidden="true"
-                >
+                <span className="text-cream/20" aria-hidden="true">
                   •
                 </span>
 
@@ -246,8 +305,7 @@ export default function Footer() {
 
             </div>
 
-
-            {/* MordecAI Credit */}
+            {/* MORDECAI CREDIT */}
 
             <a
               href="https://getmordecai.com"
@@ -263,15 +321,13 @@ export default function Footer() {
                 border
                 border-cream/10
                 bg-cream/5
-                px-4
-                py-2
+                px-3
+                py-1.5
                 transition
-                duration-300
                 hover:border-gold/60
                 hover:bg-cream/10
               "
             >
-
               <span className="text-xs text-cream/45 transition group-hover:text-cream/75">
                 Developed by
               </span>
@@ -279,9 +335,10 @@ export default function Footer() {
               <img
                 src={mordecaiLogo}
                 alt="MordecAI"
-                className="h-7 w-auto transition duration-300 group-hover:scale-105"
+                loading="lazy"
+                decoding="async"
+                className="h-6 w-auto transition group-hover:scale-105"
               />
-
             </a>
 
           </div>

@@ -1,28 +1,70 @@
+// src/components/home/VisitCTA.jsx
+
 import { MapPin } from 'lucide-react'
 import { siteInfo } from '../../data/site'
-import visitus from '../../assets/misc/visitus.jpeg'
+
+import visitus from '../../assets/misc/visitus.webp'
+
+// Responsive cactus backgrounds
+import cactusDesktop from '../../assets/misc/background-desktop.webp'
+import cactusMobile from '../../assets/misc/background-mobile.webp'
 
 export default function VisitCTA() {
   return (
-    <section className="bg-cream py-24 sm:py-32">
+    <section className="relative isolate overflow-hidden bg-cream py-24 sm:py-32">
 
-      {/* Page spacing only */}
-      <div className="page-shell">
+      {/* ========================================
+          MOBILE CACTUS BACKGROUND
+      ======================================== */}
 
-        {/* Actual card */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 z-0 bg-top bg-repeat-y opacity-30 md:hidden"
+        style={{
+          backgroundImage: `url(${cactusMobile})`,
+          backgroundSize: '100% auto',
+        }}
+      />
+
+      {/* ========================================
+          DESKTOP CACTUS BACKGROUND
+      ======================================== */}
+
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 z-0 hidden bg-top bg-repeat-y opacity-30 md:block"
+        style={{
+          backgroundImage: `url(${cactusDesktop})`,
+          backgroundSize: '100% auto',
+        }}
+      />
+
+      {/* ========================================
+          MAIN CONTENT
+      ======================================== */}
+
+      <div className="page-shell relative z-10">
+
+        {/* VISIT CARD */}
+
         <div className="grid overflow-hidden rounded-[2rem] bg-forest text-cream lg:grid-cols-2">
 
-          {/* Image */}
+          {/* IMAGE */}
+
           <div className="relative min-h-[360px]">
             <img
               src={visitus}
               alt="Dining room at Green Cactus in Stony Brook"
+              loading="lazy"
+              decoding="async"
               className="absolute inset-0 h-full w-full object-cover"
             />
           </div>
 
-          {/* Content */}
+          {/* CONTENT */}
+
           <div className="flex flex-col justify-center p-9 sm:p-14">
+
             <p className="text-xs font-bold uppercase tracking-[.28em] text-gold">
               Come hungry
             </p>
@@ -37,6 +79,7 @@ export default function VisitCTA() {
             </p>
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+
               <a
                 href={siteInfo.directionsUrl}
                 target="_blank"
@@ -53,11 +96,15 @@ export default function VisitCTA() {
               >
                 Call {siteInfo.phoneDisplay}
               </a>
+
             </div>
+
           </div>
 
         </div>
+
       </div>
+
     </section>
   )
 }
